@@ -9,7 +9,12 @@ body{
   font-family: 'HelveticaNeue-Light', Helvetica, Arial, Sans-Serif;
 }
 
+h1{
+  font-weight: bold;
+}
+
 h2{
+  margin-top: 20px; 
   text-align: center;
   border: 5px solid; 
   padding: 5px; 
@@ -34,6 +39,10 @@ h3{
   display: inline-block;
 }
 
+#selectedCity {
+  margin-bottom: 100px; 
+}
+
 #selectedCity > .container > .row > .col{
   height: 120px;
   border: solid white;  
@@ -45,28 +54,12 @@ h3{
 }
 
 .today {
-  background-color: #224455;  
-  color: #ccccaa;
   border: solid white;
 }
 
-.forecast {
-  background-color: #335566;
+.today, .forecast, .hourly {
+  background-color: #224455;  
   color: #ccccaa;
-  /*border: solid white;*/
-}
-
-.forecast ul {
-  border: solid white;  
-}
-
-.hourly {
-  color: white;
-  /*background: #222222;*/
-}
-
-.hourly ul {
-  /*border-style: solid;*/
 }
 
 .hide {
