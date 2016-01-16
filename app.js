@@ -28,7 +28,6 @@ var app = {
   },
   getConditions: function(){
     $.get('http://api.wunderground.com/api/58853d29672309fb/conditions/q/'+app.url + '.json', function(data){
-      console.log("data:", data);
       var current_observation = data.current_observation; 
       var display_location = current_observation.display_location;  
       var city = display_location.city; 
@@ -65,7 +64,6 @@ var app = {
   },
   getForecast: function(){
     $.get('http://api.wunderground.com/api/58853d29672309fb/forecast/q/'+app.url + '.json', function(data){
-      console.log("data:", data);
       var forecast = data.forecast.txt_forecast.forecastday; 
       var forecastLength = forecast.length; 
       var $forecastDiv = $('<div>').addClass('row forecast');
@@ -84,7 +82,6 @@ var app = {
   },
   getHourly: function(){
     $.get('http://api.wunderground.com/api/58853d29672309fb/hourly/q/'+app.url + '.json', function(data){
-      console.log("data:", data);
       var hourly = data.hourly_forecast;
       var hourlyLength = hourly.length;               
       var $hourlyDiv = $('<div>').addClass('row hourly');
