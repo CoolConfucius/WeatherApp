@@ -9,6 +9,7 @@ var app = {
     app.updateList(); 
     app.getCurrentLocation(); 
     $('#go').click(app.goClicked);
+    $('#zipGo').click(app.zipGo);
     $('#citiesList').on('click', '.listedCity', app.listClicked)
     $('#citiesList').on('click', '.remove', app.remove)
   },
@@ -19,12 +20,15 @@ var app = {
       currentLocation.city = data.location.city; 
       currentLocation.lat = data.location.lat; 
       currentLocation.lon = data.location.lon; 
+      currentLocation.zip = data.location.zip; 
       $('#searchState').attr('value', currentLocation.state);
       $('#searchCity').attr('value', currentLocation.city);
+      $('#searchZip').attr('value', currentLocation.zip);
     });
   },
   getConditions: function(){
-    $.get('http://api.wunderground.com/api/58853d29672309fb/conditions/q/'+app.state +'/' + app.city + '.json', function(data){
+    $.get('http://api.wunderground.com/api/58853d29672309fb/conditions/q/'+app.url + '.json', function(data){
+      console.log("data:", data);
       var current_observation = data.current_observation; 
       var display_location = current_observation.display_location;  
       var city = display_location.city; 
@@ -60,7 +64,8 @@ var app = {
     }); 
   },
   getForecast: function(){
-    $.get('http://api.wunderground.com/api/58853d29672309fb/forecast/q/'+app.state +'/' + app.city + '.json', function(data){
+    $.get('http://api.wunderground.com/api/58853d29672309fb/forecast/q/'+app.url + '.json', function(data){
+      console.log("data:", data);
       var forecast = data.forecast.txt_forecast.forecastday; 
       var forecastLength = forecast.length; 
       var $forecastDiv = $('<div>').addClass('row forecast');
@@ -78,7 +83,8 @@ var app = {
     }); 
   },
   getHourly: function(){
-    $.get('http://api.wunderground.com/api/58853d29672309fb/hourly/q/'+app.state +'/' + app.city + '.json', function(data){
+    $.get('http://api.wunderground.com/api/58853d29672309fb/hourly/q/'+app.url + '.json', function(data){
+      console.log("data:", data);
       var hourly = data.hourly_forecast;
       var hourlyLength = hourly.length;               
       var $hourlyDiv = $('<div>').addClass('row hourly');
@@ -107,7 +113,8 @@ var app = {
     app.clear(); 
     app.state = $('#searchState').val().toUpperCase(); 
     app.city = _.capitalize($('#searchCity').val()) ; 
-    
+    app.url = app.state +'/' + app.city;
+
     $('h2').removeClass('hide');
     $('#cityHead').text(app.state + " , " + app.city);
     app.city = app.city.replace(/\s/g, '_') ; 
@@ -115,6 +122,22 @@ var app = {
     app.getForecast(); 
     app.getHourly();
     citiesList.push(app.state+'/'+app.city);
+    citiesList = _.uniq(citiesList);
+    saveToStorage(); 
+    app.updateList(); 
+  }, 
+
+  zipGo: function() {    
+    app.clear(); 
+    app.zip = $('#searchZip').val(); 
+    app.url = app.zip.toString();
+
+    $('h2').removeClass('hide');
+    $('#cityHead').text(app.zip);
+    app.getConditions(); 
+    app.getForecast(); 
+    app.getHourly();
+    citiesList.push(app.zip);
     citiesList = _.uniq(citiesList);
     saveToStorage(); 
     app.updateList(); 
@@ -135,10 +158,12 @@ var app = {
   listClicked: function(){
     app.clear(); 
     var $pair = $(this).text().split('/');
-    app.state = $pair[0];
-    app.city = $pair[1];
     $('h2').removeClass('hide');
-    $('#cityHead').text(app.state + " , " + app.city);
+    if ($pair.length === 2) {
+      $('#cityHead').text($pair[0] + " , " + $pair[1]);
+    } else {
+      $('#cityHead').text("Zip: " + $pair[0]);
+    }
     app.getConditions(); 
     app.getForecast(); 
     app.getHourly();
