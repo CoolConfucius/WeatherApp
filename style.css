@@ -1,27 +1,37 @@
 * {
   overflow: auto;
+  font-size: 16px; 
 }
 
 body{
   background-color: black;
   color: white;
+  font-family: 'HelveticaNeue-Light', Helvetica, Arial, Sans-Serif;
 }
 
 h2{
   text-align: center;
   border: 5px solid; 
+  padding: 5px; 
 }
 
-#citiesList{
+#citiesList div{
  display: inline-block; 
+}
+
+#head {
+  margin: 0 auto; 
+  text-align: center;
 }
 
 #head input{
   color: black;
+  display: inline-block;
 }
 
 #selectedCity > .container > .row > .col{
   height: 120px;
+  border: solid white;  
 }
 
 .jumbotron{
@@ -29,27 +39,29 @@ h2{
   color: black;
 }
 
-/*.today {
-  background-color: #bbbb99;  
-  color: #113333;
-}*/
+.today {
+  background-color: #224455;  
+  color: #ccccaa;
+  border: solid white;
+}
 
 .forecast {
   background-color: #335566;
-  /*color: #ccccaa;*/
+  color: #ccccaa;
+  /*border: solid white;*/
 }
 
 .forecast ul {
-  border-style: solid;  
+  border: solid white;  
 }
 
 .hourly {
   color: white;
-  background: #222222;
+  /*background: #222222;*/
 }
 
 .hourly ul {
-  border-style: solid;
+  /*border-style: solid;*/
 }
 
 .hide {

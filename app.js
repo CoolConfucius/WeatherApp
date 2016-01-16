@@ -6,6 +6,7 @@ var app = {
   init: function(){
     app.getCurrentLocation(); 
     $('#go').click(app.goClicked);
+    $('#citiesList').on('click', '.listedCity', app.listClicked)
   },
   getCurrentLocation: function(){
     $.get('http://api.wunderground.com/api/58853d29672309fb/geolookup/q/autoip.json', function(data){
@@ -49,8 +50,7 @@ var app = {
       var $today_overview = $('<ul>');
       $today_overview.append($temperature_string,$wind_string,$pressure_in,$dewpoint_string,$feelslike_string,$UV,$precip_1hr_string); 
 
-      var $todayDiv = $('<div>'); 
-      $todayDiv.addClass('today'); 
+      var $todayDiv = $('<div>').addClass('today'); 
       $todayDiv.append($currentIcon, $weather, $today_overview); 
       $('#conditions').append($todayDiv); 
     }); 
@@ -103,6 +103,25 @@ goClicked: function() {
   app.clear(); 
   app.state = $('#searchState').val().toUpperCase(); 
   app.city = $('#searchCity').val().replace(/\s/g, '_'); 
+  citiesList.push(app.state+'/'+app.city);
+  citiesList = _.uniq(citiesList);
+  var $buttonsRow = $('<div>'); 
+  citiesList.forEach(function(entry){
+    var $button = $('<div>').addClass('btn btn-primary listedCity').text(entry);
+    $buttonsRow.append($button);
+  })
+  $('#citiesList').append($buttonsRow);
+  $('h2').removeClass('hide');
+  $('#cityHead').text(app.state + " , " + app.city);
+  app.getConditions(); 
+  app.getForecast(); 
+  app.getHourly();
+}, 
+listClicked: function(){
+  app.clear(); 
+  var $pair = $(this).text().split('/');
+  app.state = $pair[0];
+  app.city = $pair[1];
   $('h2').removeClass('hide');
   $('#cityHead').text(app.state + " , " + app.city);
   app.getConditions(); 
