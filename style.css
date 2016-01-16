@@ -15,8 +15,13 @@ h2{
   padding: 5px; 
 }
 
+h3{
+  margin-left: 10px;
+}
+
 #citiesList div{
  display: inline-block; 
+ margin-left: 10px; 
 }
 
 #head {

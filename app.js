@@ -1,9 +1,12 @@
-// 'use strict';
+'use strict';
+
 var currentLocation = {}; 
 var citiesList = []; 
 
 var app = {
   init: function(){
+    loadFromStorage(); 
+    app.updateList(); 
     app.getCurrentLocation(); 
     $('#go').click(app.goClicked);
     $('#citiesList').on('click', '.listedCity', app.listClicked)
@@ -54,83 +57,103 @@ var app = {
       $todayDiv.append($currentIcon, $weather, $today_overview); 
       $('#conditions').append($todayDiv); 
     }); 
-},
-getForecast: function(){
-  $.get('http://api.wunderground.com/api/58853d29672309fb/forecast/q/'+app.state +'/' + app.city + '.json', function(data){
-    var forecast = data.forecast.txt_forecast.forecastday; 
-    var forecastLength = forecast.length; 
-    $forecastDiv = $('<div>').addClass('row forecast');
+  },
+  getForecast: function(){
+    $.get('http://api.wunderground.com/api/58853d29672309fb/forecast/q/'+app.state +'/' + app.city + '.json', function(data){
+      var forecast = data.forecast.txt_forecast.forecastday; 
+      var forecastLength = forecast.length; 
+      var $forecastDiv = $('<div>').addClass('row forecast');
 
-    forecast.forEach( function(element, index, array){
-      var $forecastList = $('<ul>').addClass('col col-sm-6');
-      var $title = $('<li>').text(element.title);
-      var $icon_url = $('<img>').attr('src', element.icon_url);
-      var $fcttext = $('<li>').text(element.fcttext);
-      var $fcttext_metric = $('<li>').text(element.fcttext_metric);
-      $forecastList.append($title, $icon_url, $fcttext, $fcttext_metric); 
-      $forecastDiv.append($forecastList);
-    });         
-    $('#forecast').append($forecastDiv); 
-  }); 
-},
-getHourly: function(){
-  $.get('http://api.wunderground.com/api/58853d29672309fb/hourly/q/'+app.state +'/' + app.city + '.json', function(data){
-    var hourly = data.hourly_forecast;
-    var hourlyLength = hourly.length;               
-    $hourlyDiv = $('<div>').addClass('row hourly');
+      forecast.forEach( function(element, index, array){
+        var $forecastList = $('<ul>').addClass('col col-sm-6');
+        var $title = $('<li>').text(element.title);
+        var $icon_url = $('<img>').attr('src', element.icon_url);
+        var $fcttext = $('<li>').text(element.fcttext);
+        var $fcttext_metric = $('<li>').text(element.fcttext_metric);
+        $forecastList.append($title, $icon_url, $fcttext, $fcttext_metric); 
+        $forecastDiv.append($forecastList);
+      });         
+      $('#forecast').append($forecastDiv); 
+    }); 
+  },
+  getHourly: function(){
+    $.get('http://api.wunderground.com/api/58853d29672309fb/hourly/q/'+app.state +'/' + app.city + '.json', function(data){
+      var hourly = data.hourly_forecast;
+      var hourlyLength = hourly.length;               
+      var $hourlyDiv = $('<div>').addClass('row hourly');
 
-    hourly.forEach( function(element, index, array){        
-      var $hourlyList = $('<ul>').addClass('col col-sm-2');
-      var $FCTTIME = $('<li>').text(element.FCTTIME.pretty);
-      var $icon_url = $('<img>').attr('src', element.icon_url);
-      var $condition = $('<li>').text(element.condition);
-      var $temp = $('<li>').text('Tempreature: English: '+element.temp.english+', Metric: '+element.temp.metric);
-      var $wind = $('<li>').text('Wind: English speed: '+element.wspd.english+', Metric: '+element.wspd.metric+". Direction: "+element.wdir.dir);
-      $hourlyList.append($FCTTIME, $icon_url, $condition, $temp, $wind); 
-      $hourlyDiv.append($hourlyList);
+      hourly.forEach( function(element, index, array){        
+        var $hourlyList = $('<ul>').addClass('col col-sm-2');
+        var $FCTTIME = $('<li>').text(element.FCTTIME.pretty);
+        var $icon_url = $('<img>').attr('src', element.icon_url);
+        var $condition = $('<li>').text(element.condition);
+        var $temp = $('<li>').text('Tempreature: English: '+element.temp.english+', Metric: '+element.temp.metric);
+        var $wind = $('<li>').text('Wind: English speed: '+element.wspd.english+', Metric: '+element.wspd.metric+". Direction: "+element.wdir.dir);
+        $hourlyList.append($FCTTIME, $icon_url, $condition, $temp, $wind); 
+        $hourlyDiv.append($hourlyList);
 
-    });   
-    $('#hourly').append($hourlyDiv);
-  }); 
-},
-clear: function(){
-  $('#conditions').text(''); 
-  $('#forecast').text(''); 
-  $('#hourly').text(''); 
-},
+      });   
+      $('#hourly').append($hourlyDiv);
+    }); 
+  },
+  clear: function(){
+    $('#conditions').text(''); 
+    $('#forecast').text(''); 
+    $('#hourly').text(''); 
+  },
 
-goClicked: function() {    
-  app.clear(); 
-  app.state = $('#searchState').val().toUpperCase(); 
-  app.city = $('#searchCity').val().replace(/\s/g, '_'); 
-  citiesList.push(app.state+'/'+app.city);
-  citiesList = _.uniq(citiesList);
-  var $buttonsRow = $('<div>'); 
-  citiesList.forEach(function(entry){
-    var $button = $('<div>').addClass('btn btn-primary listedCity').text(entry);
-    $buttonsRow.append($button);
-  })
-  $('#citiesList').append($buttonsRow);
-  $('h2').removeClass('hide');
-  $('#cityHead').text(app.state + " , " + app.city);
-  app.getConditions(); 
-  app.getForecast(); 
-  app.getHourly();
-}, 
-listClicked: function(){
-  app.clear(); 
-  var $pair = $(this).text().split('/');
-  app.state = $pair[0];
-  app.city = $pair[1];
-  $('h2').removeClass('hide');
-  $('#cityHead').text(app.state + " , " + app.city);
-  app.getConditions(); 
-  app.getForecast(); 
-  app.getHourly();
+  goClicked: function() {    
+    app.clear(); 
+    app.state = $('#searchState').val().toUpperCase(); 
+    app.city = _.capitalize($('#searchCity').val() ).replace(/\s/g, '_') ; 
+    
+    $('h2').removeClass('hide');
+    $('#cityHead').text(app.state + " , " + app.city);
+    app.getConditions(); 
+    app.getForecast(); 
+    app.getHourly();
+    citiesList.push(app.state+'/'+app.city);
+    citiesList = _.uniq(citiesList);
+    saveToStorage(); 
+    app.updateList(); 
+  }, 
+
+  listClicked: function(){
+    app.clear(); 
+    var $pair = $(this).text().split('/');
+    app.state = $pair[0];
+    app.city = $pair[1];
+    $('h2').removeClass('hide');
+    $('#cityHead').text(app.state + " , " + app.city);
+    app.getConditions(); 
+    app.getForecast(); 
+    app.getHourly();
+  }, 
+  updateList: function(){
+    var $buttonsRow = $('<div>'); 
+    
+    citiesList.forEach(function(entry){
+      var $button = $('<div>').addClass('btn btn-primary listedCity').text(entry);
+      $buttonsRow.append($button);
+    })
+    $('#citiesList').text('');
+    $('#citiesList').append($buttonsRow);
+  }
 }
 
 
 
+//Storage function
+function saveToStorage() {
+  localStorage.citiesList = JSON.stringify(citiesList);
 }
+
+function loadFromStorage() {
+  if(!localStorage.citiesList) {
+    localStorage.citiesList = '[]';
+  }
+  citiesList = JSON.parse(localStorage.citiesList);
+}
+
 
 $(document).ready(app.init);
