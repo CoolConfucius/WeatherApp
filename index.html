@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather App</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <br>
+  <div id="head">
+      <span>Enter State:</span>
+      <input type="text" id='searchState'>
+      <span>Enter City:</span>
+      <input type="text" id='searchCity'>
+      <button class="btn btn-primary" id='go'>Go</button>
+      <!-- <input type="text"> -->
+
+  </div> 
+
+  <div id="citiesList">
+    <span>Cities List: </span>
+  </div>
+
+  <div class="jumbotron">
+    <h1 id="cityHead"></h1>
+  </div>
+  <div id="selectedCity">
+    <h2 class="hide">Conditions</h2>
+    <div id="conditions" class="container"></div>
+    <h2 class="hide">Forecast</h2>
+    <div id="forecast" class="container"></div>
+    <h2 class="hide">Hourly</h2>
+    <div id="hourly" class="container"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.0/lodash.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

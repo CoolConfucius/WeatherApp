@@ -1,0 +1,57 @@
+* {
+  overflow: auto;
+}
+
+body{
+  background-color: black;
+  color: white;
+}
+
+h2{
+  text-align: center;
+  border: 5px solid; 
+}
+
+#citiesList{
+ display: inline-block; 
+}
+
+#head input{
+  color: black;
+}
+
+#selectedCity > .container > .row > .col{
+  height: 120px;
+}
+
+.jumbotron{
+  text-align: center;
+  color: black;
+}
+
+/*.today {
+  background-color: #bbbb99;  
+  color: #113333;
+}*/
+
+.forecast {
+  background-color: #335566;
+  /*color: #ccccaa;*/
+}
+
+.forecast ul {
+  border-style: solid;  
+}
+
+.hourly {
+  color: white;
+  background: #222222;
+}
+
+.hourly ul {
+  border-style: solid;
+}
+
+.hide {
+  display: none; 
+}
