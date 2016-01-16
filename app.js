@@ -10,6 +10,7 @@ var app = {
     app.getCurrentLocation(); 
     $('#go').click(app.goClicked);
     $('#citiesList').on('click', '.listedCity', app.listClicked)
+    $('#citiesList').on('click', '.remove', app.remove)
   },
   getCurrentLocation: function(){
     $.get('http://api.wunderground.com/api/58853d29672309fb/geolookup/q/autoip.json', function(data){
@@ -105,10 +106,11 @@ var app = {
   goClicked: function() {    
     app.clear(); 
     app.state = $('#searchState').val().toUpperCase(); 
-    app.city = _.capitalize($('#searchCity').val() ).replace(/\s/g, '_') ; 
+    app.city = _.capitalize($('#searchCity').val()) ; 
     
     $('h2').removeClass('hide');
     $('#cityHead').text(app.state + " , " + app.city);
+    app.city = app.city.replace(/\s/g, '_') ; 
     app.getConditions(); 
     app.getForecast(); 
     app.getHourly();
@@ -117,6 +119,18 @@ var app = {
     saveToStorage(); 
     app.updateList(); 
   }, 
+
+  updateList: function(){
+    var $buttonsRow = $('<div>'); 
+    
+    citiesList.forEach(function(entry){
+      var $button = $('<button>').addClass('btn btn-primary listedCity').text(entry);
+      var $remove = $('<button>').addClass('btn btn-danger remove').text('X');
+      $buttonsRow.append($button, $remove);
+    })
+    $('#citiesList').text('');
+    $('#citiesList').append($buttonsRow);
+  },
 
   listClicked: function(){
     app.clear(); 
@@ -129,21 +143,18 @@ var app = {
     app.getForecast(); 
     app.getHourly();
   }, 
-  updateList: function(){
-    var $buttonsRow = $('<div>'); 
-    
-    citiesList.forEach(function(entry){
-      var $button = $('<div>').addClass('btn btn-primary listedCity').text(entry);
-      $buttonsRow.append($button);
-    })
-    $('#citiesList').text('');
-    $('#citiesList').append($buttonsRow);
+
+  remove: function(){
+    var $this = $(this);
+    var index = ($this.index() - 1)/2; 
+    citiesList.splice(index, 1); 
+    app.updateList(); 
+    saveToStorage(); 
   }
 }
 
 
-
-//Storage function
+//Storage functions
 function saveToStorage() {
   localStorage.citiesList = JSON.stringify(citiesList);
 }
