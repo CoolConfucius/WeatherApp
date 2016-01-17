@@ -103,9 +103,9 @@ var app = {
     }); 
   },
   clear: function(){
-    $('#conditions').text(''); 
-    $('#forecast').text(''); 
-    $('#hourly').text(''); 
+    $('#conditions').empty(); 
+    $('#forecast').empty(); 
+    $('#hourly').empty(); 
   },
 
   goClicked: function() {    
