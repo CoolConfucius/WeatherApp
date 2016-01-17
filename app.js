@@ -159,8 +159,10 @@ var app = {
     var $pair = $(this).text().split('/');
     $('h2').removeClass('hide');
     if ($pair.length === 2) {
+      app.url = $pair[0]+'/'+$pair[1];
       $('#cityHead').text($pair[0] + " , " + $pair[1]);
     } else {
+      app.url = $pair[0].toString(); 
       $('#cityHead').text("Zip: " + $pair[0]);
     }
     app.getConditions(); 
