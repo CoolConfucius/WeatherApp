@@ -157,6 +157,7 @@ var app = {
   listClicked: function(){
     app.clear(); 
     var $pair = $(this).text().split('/');
+    console.log($pair);
     $('h2').removeClass('hide');
     if ($pair.length === 2) {
       app.url = $pair[0]+'/'+$pair[1];
