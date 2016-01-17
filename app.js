@@ -6,6 +6,8 @@ var citiesList = [];
 var app = {
   init: function(){
     loadFromStorage(); 
+    app.wunderground = 'http://api.wunderground.com/api/';
+    app.api = '58853d29672309fb';
     app.updateList(); 
     app.getCurrentLocation(); 
     $('#go').click(app.goClicked);
@@ -14,7 +16,7 @@ var app = {
     $('#citiesList').on('click', '.remove', app.remove)
   },
   getCurrentLocation: function(){
-    $.get('http://api.wunderground.com/api/58853d29672309fb/geolookup/q/autoip.json', function(data){
+    $.get( app.wunderground + app.api + '/geolookup/q/autoip.json', function(data){
       currentLocation.country = data.location.country;
       currentLocation.state = data.location.state; 
       currentLocation.city = data.location.city; 
@@ -27,7 +29,7 @@ var app = {
     });
   },
   getConditions: function(){
-    $.get('http://api.wunderground.com/api/58853d29672309fb/conditions/q/'+app.url + '.json', function(data){
+    $.get( app.wunderground + app.api + '/conditions/q/'+app.url + '.json', function(data){
       var current_observation = data.current_observation; 
       var display_location = current_observation.display_location;  
       var city = display_location.city; 
@@ -63,7 +65,7 @@ var app = {
     }); 
   },
   getForecast: function(){
-    $.get('http://api.wunderground.com/api/58853d29672309fb/forecast/q/'+app.url + '.json', function(data){
+    $.get( app.wunderground + app.api + '/forecast/q/'+app.url + '.json', function(data){
       var forecast = data.forecast.txt_forecast.forecastday; 
       var forecastLength = forecast.length; 
       var $forecastDiv = $('<div>').addClass('row forecast');
@@ -81,7 +83,7 @@ var app = {
     }); 
   },
   getHourly: function(){
-    $.get('http://api.wunderground.com/api/58853d29672309fb/hourly/q/'+app.url + '.json', function(data){
+    $.get( app.wunderground + app.api + '/hourly/q/'+app.url + '.json', function(data){
       var hourly = data.hourly_forecast;
       var hourlyLength = hourly.length;               
       var $hourlyDiv = $('<div>').addClass('row hourly');
